@@ -1,21 +1,30 @@
 // =========================================================
 // app.js — Frontend GitHub (satu-satunya frontend publik)
 // =========================================================
-// Frontend TIDAK menyimpan password/secret/credential.
+// Frontend TIDAK menyimpan password/secret/credential DI SERVER.
+// "Ingat saya" hanya menyimpan data secara LOKAL di browser
+// pengguna (localStorage), tidak pernah dikirim ke tempat lain
+// selain proses login normal ke Apps Script Master.
 // Frontend TIDAK menentukan tenant/database secara bebas —
 // seluruhnya diputuskan oleh Apps Script Master di server.
 // =========================================================
 
-function switchTab(tab) {
-  var isLogin = tab === 'login';
-  document.getElementById('tabLogin').classList.toggle('active', isLogin);
-  document.getElementById('tabRegister').classList.toggle('active', !isLogin);
+var REMEMBER_KEY = 'sima_remember_v1';
+
+function toggleForm(target) {
+  var isLogin = target === 'login';
   document.getElementById('formLogin').classList.toggle('hidden', !isLogin);
   document.getElementById('formRegister').classList.toggle('hidden', isLogin);
   document.getElementById('formTitle').textContent = isLogin ? 'Masuk ke SIMA' : 'Daftarkan Lembaga';
   document.getElementById('formSub').textContent = isLogin
     ? 'Portal madrasah — satu pintu untuk semua lembaga.'
     : 'Pendaftaran akan diperiksa dan disetujui oleh Superadmin sebelum dapat login.';
+}
+
+function togglePassword() {
+  var input = document.getElementById('loginPassword');
+  var isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
 }
 
 function setMsg(id, text, kind) {
@@ -41,6 +50,33 @@ async function callMaster(action, payload) {
   return res.json();
 }
 
+// --- "Ingat saya": simpan/kembalikan username & password secara LOKAL saja ---
+function loadRemembered() {
+  try {
+    var raw = localStorage.getItem(REMEMBER_KEY);
+    if (!raw) return;
+    var data = JSON.parse(atob(raw));
+    if (data && data.u) {
+      document.getElementById('loginUsername').value = data.u;
+      document.getElementById('loginPassword').value = data.p ? atob(data.p) : '';
+      document.getElementById('rememberMe').checked = true;
+    }
+  } catch (e) {
+    localStorage.removeItem(REMEMBER_KEY);
+  }
+}
+
+function saveRemembered(username, password, remember) {
+  if (!remember) {
+    localStorage.removeItem(REMEMBER_KEY);
+    return;
+  }
+  var data = { u: username, p: btoa(password) };
+  localStorage.setItem(REMEMBER_KEY, btoa(JSON.stringify(data)));
+}
+
+document.addEventListener('DOMContentLoaded', loadRemembered);
+
 async function doLogin(e) {
   e.preventDefault();
   var btn = document.getElementById('loginBtn');
@@ -49,10 +85,12 @@ async function doLogin(e) {
 
   var username = document.getElementById('loginUsername').value.trim();
   var password = document.getElementById('loginPassword').value;
+  var remember = document.getElementById('rememberMe').checked;
 
   try {
     var res = await callMaster('tenantLogin', { username: username, password: password });
     if (res.ok) {
+      saveRemembered(username, password, remember);
       setMsg('loginMsg', 'Berhasil, mengarahkan ke ' + res.namaLembaga + '...', 'ok');
       var target = res.backendUrl + (res.backendUrl.indexOf('?') === -1 ? '?' : '&') +
         'tenant=' + encodeURIComponent(res.tenantId) + '&token=' + encodeURIComponent(res.token);
