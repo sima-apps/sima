@@ -1,54 +1,91 @@
 :root {
   --accent: #0F6CBD;
   --accent-hover: #115EA3;
+  --accent-light: #E8F1FB;
   --danger: #C42B1C;
   --success: #107C10;
   --text-primary: #1B1B1B;
   --text-secondary: #616161;
   --text-tertiary: #8A8886;
   --border-subtle: rgba(0,0,0,0.08);
-  --radius-lg: 12px;
-  --shadow-flyout: 0 6.4px 14.4px rgba(0,0,0,0.13), 0 1.2px 3.6px rgba(0,0,0,0.10);
+  --radius-lg: 14px;
+  --shadow-flyout: 0 8px 28px rgba(0,0,0,0.16), 0 1.5px 4px rgba(0,0,0,0.10);
 }
 * { box-sizing: border-box; }
 html, body {
   margin: 0; height: 100%;
   font-family: "Segoe UI Variable","Segoe UI",-apple-system,BlinkMacSystemFont,Arial,sans-serif;
   color: var(--text-primary);
-  background: radial-gradient(circle at 20% 20%, #E8F1FB, #F3F3F3 55%),
-              radial-gradient(circle at 80% 80%, #E5EAFB, transparent 60%);
+  background:
+    radial-gradient(circle at 15% 15%, #DCEBFB, transparent 45%),
+    radial-gradient(circle at 85% 20%, #E6E1FB, transparent 50%),
+    radial-gradient(circle at 25% 90%, #E1F0EE, transparent 45%),
+    radial-gradient(circle at 90% 85%, #FBEAE1, transparent 50%),
+    linear-gradient(135deg, #F3F3F3, #E9EDF3);
+  background-attachment: fixed;
 }
 .canvas { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
 .card {
   width: 380px; max-width: 100%;
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(30px) saturate(1.6); -webkit-backdrop-filter: blur(30px) saturate(1.6);
-  border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-flyout); padding: 32px;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(40px) saturate(1.8); -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-flyout);
+  padding: 36px 32px;
+  animation: cardIn .35s ease;
 }
-.logo { width: 44px; height: 44px; border-radius: 10px; margin-bottom: 16px;
+@keyframes cardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.logo { width: 46px; height: 46px; border-radius: 12px; margin-bottom: 18px;
   background: linear-gradient(135deg, #0F6CBD, #50B0E8); display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 700; font-size: 18px; }
-h1 { font-size: 20px; margin: 0 0 4px 0; }
-.sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 22px; }
-.tabs { display: flex; gap: 4px; margin-bottom: 20px; background: rgba(0,0,0,0.04); border-radius: 6px; padding: 3px; }
-.tabs button { flex: 1; border: none; background: transparent; box-shadow: none; padding: 8px; border-radius: 4px; font-size: 13px; cursor: pointer; }
-.tabs button.active { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.09); font-weight: 600; }
+  color: #fff; font-weight: 700; font-size: 19px; box-shadow: 0 3px 10px rgba(15,108,189,0.35); }
+h1 { font-size: 21px; margin: 0 0 4px 0; font-weight: 600; letter-spacing: -0.2px; }
+.sub { color: var(--text-secondary); font-size: 13px; margin-bottom: 24px; line-height: 1.4; }
 .field { margin-bottom: 14px; }
-label { font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px; font-weight: 600; }
-input {
-  font-family: inherit; font-size: 13px; padding: 8px 10px; border-radius: 6px;
+label { font-size: 12.5px; color: var(--text-secondary); display: block; margin-bottom: 5px; font-weight: 600; }
+input[type="text"], input:not([type]), input[type="password"] {
+  font-family: inherit; font-size: 13.5px; padding: 10px 12px; border-radius: 7px;
   border: 1px solid var(--border-subtle); width: 100%; outline: none;
+  background: rgba(255,255,255,0.65); transition: border-color .15s, box-shadow .15s;
 }
-input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(15,108,189,0.18); background: #fff; }
+.pwWrap { position: relative; }
+.pwWrap input { padding-right: 38px; width: 100%; }
+.eyeBtn {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; padding: 6px; color: var(--text-tertiary);
+  display: flex; align-items: center; justify-content: center; border-radius: 6px;
+}
+.eyeBtn:hover { color: var(--accent); background: rgba(15,108,189,0.08); }
+.rowBetween { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 16px; }
+.chk { display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+.chk input { display: none; }
+.chk .box {
+  width: 17px; height: 17px; border-radius: 4px; border: 1.5px solid var(--text-tertiary);
+  display: inline-flex; align-items: center; justify-content: center; transition: all .15s; flex-shrink: 0;
+}
+.chk .box::after {
+  content: ""; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0); transition: transform .12s;
+}
+.chk input:checked + .box { background: var(--accent); border-color: var(--accent); }
+.chk input:checked + .box::after { transform: rotate(45deg) scale(1); }
+.chkLabel { font-size: 12.5px; color: var(--text-secondary); }
 button.primary {
   width: 100%; background: var(--accent); border: 1px solid var(--accent); color: #fff;
-  font-weight: 600; padding: 9px; border-radius: 6px; font-size: 13px; cursor: pointer;
+  font-weight: 600; padding: 11px; border-radius: 7px; font-size: 13.5px; cursor: pointer;
+  transition: background .15s, transform .05s;
 }
 button.primary:hover { background: var(--accent-hover); }
+button.primary:active { transform: scale(0.98); }
 button.primary:disabled { opacity: 0.6; cursor: not-allowed; }
-.msg { font-size: 12px; margin: -6px 0 12px 0; min-height: 14px; }
+.msg { font-size: 12px; margin: -4px 0 12px 0; min-height: 14px; }
 .msg.err { color: var(--danger); }
 .msg.ok { color: var(--success); }
-.foot { margin-top: 16px; font-size: 11px; color: var(--text-tertiary); text-align: center; }
+.switchRow { text-align: center; font-size: 12.5px; color: var(--text-secondary); margin-top: 18px; }
+.switchRow a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.switchRow a:hover { text-decoration: underline; }
+.foot { margin-top: 20px; font-size: 11px; color: var(--text-tertiary); text-align: center; line-height: 1.4; }
 .hidden { display: none; }
+#formLogin, #formRegister { animation: formIn .25s ease; }
+@keyframes formIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
