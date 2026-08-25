@@ -77,6 +77,60 @@ function saveRemembered(username, password, remember) {
 
 document.addEventListener('DOMContentLoaded', loadRemembered);
 
+// =========================================================
+// PWA: splash loading, registrasi service worker, tombol Instal
+// =========================================================
+document.addEventListener('DOMContentLoaded', function () {
+  var loading = document.getElementById('loading');
+  if (loading) {
+    // Beri jeda singkat supaya animasi kartu login tidak "tabrakan"
+    // dengan splash, lalu sembunyikan.
+    setTimeout(function () { loading.classList.add('hidden'); }, 350);
+  }
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function (err) {
+      console.warn('SW register gagal:', err);
+    });
+  });
+}
+
+var deferredPrompt = null;
+var installBtn = document.getElementById('install-btn');
+
+function refreshInstallButton() {
+  if (!installBtn) return;
+  if (deferredPrompt) {
+    installBtn.classList.add('visible');
+  } else {
+    installBtn.classList.remove('visible');
+  }
+}
+
+window.addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  refreshInstallButton();
+});
+
+if (installBtn) {
+  installBtn.addEventListener('click', function () {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(function () {
+      deferredPrompt = null;
+      refreshInstallButton();
+    });
+  });
+}
+
+window.addEventListener('appinstalled', function () {
+  deferredPrompt = null;
+  refreshInstallButton();
+});
+
 async function doLogin(e) {
   e.preventDefault();
   var btn = document.getElementById('loginBtn');

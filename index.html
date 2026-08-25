@@ -2,13 +2,32 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SIMA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>SIMA - Login</title>
+
+<!-- PWA -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0F6CBD">
+
+<!-- Android / Chrome install -->
+<link rel="icon" href="./icons/icon-192.png">
+
+<!-- iOS "Add to Home Screen" support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SIMA">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="loading">
+    <div class="spinner"></div>
+    <span>Memuat SIMA&hellip;</span>
+  </div>
+
   <div class="canvas">
-    <div class="card">
+    <div class="card" id="loginCard">
       <div class="logo">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 4L2 8.5L12 13L22 8.5L12 4Z" fill="currentColor"/>
@@ -68,6 +87,11 @@
       <div class="foot">Hanya untuk akun yang terdaftar</div>
     </div>
   </div>
+
+  <button id="install-btn" type="button">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+    Instal Aplikasi
+  </button>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
