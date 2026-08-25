@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIMA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="canvas">
+    <div class="card">
+      <div class="logo">S</div>
+      <h1 id="formTitle">Masuk ke SIMA</h1>
+      <div class="sub" id="formSub">Portal madrasah &mdash; satu pintu untuk semua lembaga.</div>
+
+      <div class="tabs">
+        <button id="tabLogin" class="active" onclick="switchTab('login')">Masuk</button>
+        <button id="tabRegister" onclick="switchTab('register')">Daftar Lembaga</button>
+      </div>
+
+      <!-- LOGIN -->
+      <form id="formLogin" onsubmit="return doLogin(event)">
+        <div class="field"><label>Username</label><input id="loginUsername" required></div>
+        <div class="field"><label>Password</label><input id="loginPassword" type="password" required></div>
+        <div class="msg" id="loginMsg"></div>
+        <button class="primary" id="loginBtn" type="submit">Masuk</button>
+      </form>
+
+      <!-- REGISTER -->
+      <form id="formRegister" class="hidden" onsubmit="return doRegister(event)">
+        <div class="field"><label>Nama Lembaga</label><input id="regNama" required></div>
+        <div class="field"><label>Username</label><input id="regUsername" required></div>
+        <div class="field"><label>Password</label><input id="regPassword" type="password" required></div>
+        <div class="msg" id="registerMsg"></div>
+        <button class="primary" id="registerBtn" type="submit">Daftar</button>
+      </form>
+
+      <div class="foot">Satu URL untuk seluruh lembaga &mdash; sistem akan mengarahkan Anda otomatis ke server yang benar.</div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
