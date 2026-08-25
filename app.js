@@ -15,9 +15,9 @@ function toggleForm(target) {
   var isLogin = target === 'login';
   document.getElementById('formLogin').classList.toggle('hidden', !isLogin);
   document.getElementById('formRegister').classList.toggle('hidden', isLogin);
-  document.getElementById('formTitle').textContent = isLogin ? 'Masuk ke SIMA' : 'Daftarkan Lembaga';
+  document.getElementById('formTitle').textContent = isLogin ? 'Halaman Login SIMA' : 'Daftarkan Lembaga';
   document.getElementById('formSub').textContent = isLogin
-    ? 'Portal madrasah — satu pintu untuk semua lembaga.'
+    ? ''
     : 'Pendaftaran akan diperiksa dan disetujui oleh Superadmin sebelum dapat login.';
 }
 
