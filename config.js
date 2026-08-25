@@ -6,5 +6,5 @@
 // Contoh: https://script.google.com/macros/s/AKfycb.../exec
 // =========================================================
 window.SIMA_CONFIG = {
-  MASTER_URL: 'PASTE_URL_WEB_APP_MASTER_DI_SINI'
+  MASTER_URL: 'https://script.google.com/macros/s/AKfycbw4MFTt9rtnQ-_2ettYkA2Mp0AZexSshNAgwL-AEZV4qGD17DYEhmaDtKtyAN_kDm9hUQ/exec'
 };
