@@ -100,9 +100,28 @@ if ('serviceWorker' in navigator) {
 var deferredPrompt = null;
 var installBtn = document.getElementById('install-btn');
 
+// Sudah berjalan sebagai app terinstall (standalone)? Kalau ya, tombol
+// tidak perlu ditampilkan sama sekali.
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true; // iOS Safari
+}
+
+// iOS Safari TIDAK PERNAH mengirim event 'beforeinstallprompt' (Apple tidak
+// mendukung API ini). Satu-satunya cara install di iOS adalah manual lewat
+// menu Share -> "Add to Home Screen". Untuk browser ini kita tetap tampilkan
+// tombolnya, tapi saat diklik menampilkan instruksi, bukan prompt otomatis.
+function isIos() {
+  return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+}
+
 function refreshInstallButton() {
   if (!installBtn) return;
-  if (deferredPrompt) {
+  if (isStandalone()) {
+    installBtn.classList.remove('visible');
+    return;
+  }
+  if (deferredPrompt || isIos()) {
     installBtn.classList.add('visible');
   } else {
     installBtn.classList.remove('visible');
@@ -117,12 +136,17 @@ window.addEventListener('beforeinstallprompt', function (e) {
 
 if (installBtn) {
   installBtn.addEventListener('click', function () {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.finally(function () {
-      deferredPrompt = null;
-      refreshInstallButton();
-    });
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(function () {
+        deferredPrompt = null;
+        refreshInstallButton();
+      });
+      return;
+    }
+    if (isIos()) {
+      alert('Untuk instal di iPhone/iPad:\n\n1. Ketuk ikon Share (kotak dengan panah ke atas) di Safari\n2. Pilih "Add to Home Screen" / "Tambah ke Layar Utama"\n3. Ketuk "Add"');
+    }
   });
 }
 
@@ -130,6 +154,10 @@ window.addEventListener('appinstalled', function () {
   deferredPrompt = null;
   refreshInstallButton();
 });
+
+// Tampilkan tombol sedini mungkin untuk kasus iOS (tidak menunggu event apa pun).
+refreshInstallButton();
+
 
 async function doLogin(e) {
   e.preventDefault();
